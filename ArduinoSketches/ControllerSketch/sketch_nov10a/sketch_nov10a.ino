@@ -19,6 +19,10 @@ void setup() {
   //Button Input
   pinMode(2, INPUT);
 
+  //Vibration Output
+  pinMode(8, OUTPUT);
+
+
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x6B);  // PWR_MGMT_1 register
@@ -29,10 +33,12 @@ void setup() {
 
 void loop() {
   
-//Button
+  //Button
   buttonState = digitalRead(2);
-  if(buttonState == HIGH)
+  if(buttonState > 0)
+  {
     Serial.println("Pressed");
+  }
 
   //Rotary Encoder
   long newPosition = myEnc.read();
@@ -47,7 +53,7 @@ void loop() {
 
 
 
-//Accelorometer + Gyroscope
+  //Accelorometer + Gyroscope
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
   Wire.endTransmission(false);
@@ -83,18 +89,19 @@ void loop() {
   // Serial.print(" | GyX = "); Serial.print(GyX);
   // Serial.print(" | GyY = "); Serial.print(GyY);
   // Serial.print(" | GyZ = "); Serial.println(GyZ);
-  delay(10);
-}
 
-void OutputToArduino()
-{
-    switch(Serial.read())
+  //Vibration Motor
+  switch(Serial.read())
   {
-    case 'A':
-      Serial.println("Recieved 'A' on Arduino!");
+    case 'V':
+      digitalWrite(8, HIGH);
+      break;
+    case 'I':
+      digitalWrite(8, 0);
       break;
   }
 
+  delay(20);
 }
 
 //convert the accel data to pitch/roll

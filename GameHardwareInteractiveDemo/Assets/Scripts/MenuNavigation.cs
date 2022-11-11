@@ -34,7 +34,6 @@ public class MenuNavigation : MonoBehaviour
     {
 
         string message = serialController.ReadSerialMessage();
-
         if (message != null)
         {
             if (message == "Pressed")
@@ -47,6 +46,7 @@ public class MenuNavigation : MonoBehaviour
                 menuOption = -1;
         }
 
+        serialController.SendSerialMessage("I");
         selectUI.position = startPos + new Vector2(0.0f, 125.9f) * menuOption;
     }
 

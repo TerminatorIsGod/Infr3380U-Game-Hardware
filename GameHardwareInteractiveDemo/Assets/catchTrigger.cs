@@ -14,6 +14,8 @@ public class catchTrigger : MonoBehaviour
             PlayerController.instance.bobCast = false;
             if (PlayerController.instance.fishCaught)
             {
+                PlayerController.instance.serialController.SendSerialMessage("I");
+
                 PlayerController.instance.fishCaught = false;
                 PlayerController.instance.timer += 20.0f;
                 PlayerController.instance.numFishCaught += 1;

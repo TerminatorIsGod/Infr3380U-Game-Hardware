@@ -31,6 +31,7 @@ public class Fish : MonoBehaviour
             rb.isKinematic = true;
             PlayerController.instance.hookedUI.SetActive(true);
             transform.parent = PlayerController.instance.gameObject.transform;
+            PlayerController.instance.serialController.SendSerialMessage("V");
         }
     }
 }

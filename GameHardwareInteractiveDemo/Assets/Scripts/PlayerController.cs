@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
         if (message != null)
         {
             
-
             //if (message == "Pressed")
                 //SceneManager.LoadScene(0);
 
@@ -77,16 +76,22 @@ public class PlayerController : MonoBehaviour
 
             if (message.StartsWith('R'))
                 roll = float.Parse(message.Substring(2));
-
         }
+
+
 
         if (timer > 0)
             timer -= Time.deltaTime;
         else
+        {
+            serialController.StopAllCoroutines();
+            serialController.gameObject.SetActive(false);
             SceneManager.LoadScene(0);
+        }
         
         timerUI.text = "Time Remaining: " + timer;
         fishUI.text = "Fish Caught: " + numFishCaught;
+
 
         if (!bobCast)
         {
