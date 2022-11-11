@@ -7,6 +7,7 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    public SerialController serialController;
     public static PlayerController instance;
     PlayerInputActions playerInputActions;
     float scrollDelta;
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject hookedUI;
 
+    float roll, pitch;
+    float prevRoll, prevPitch;
+
     private void Awake()
     {
         if (!instance)
@@ -39,16 +43,43 @@ public class PlayerController : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
 
-        playerInputActions.Menu.Scroll.performed += cntxt => scrollDelta = cntxt.ReadValue<float>();
+        //playerInputActions.Menu.Scroll.performed += cntxt => scrollDelta = cntxt.ReadValue<float>();
         playerInputActions.Menu.Select.performed += cntxt => Select();
         playerInputActions.Menu.Motion.performed += cntxt => motion = cntxt.ReadValue<Vector2>();
 
         rb = GetComponent<Rigidbody>();
+
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        string message = serialController.ReadSerialMessage();
+
+        if (message != null)
+        {
+            
+
+            if (message == "Pressed")
+                SceneManager.LoadScene(0);
+
+            if (message == "Clockwise")
+                scrollDelta = 2000;
+            else if (message == "CounterClockwise")
+                scrollDelta = -2000;
+            Vector3 dir = transform.position - playerCam.transform.position;
+            rb.AddForce(20.0f * dir.normalized * scrollDelta * Time.deltaTime);
+            scrollDelta = 0;
+
+            if (message.StartsWith('P'))
+                pitch = float.Parse(message.Substring(2));
+
+            if (message.StartsWith('R'))
+                roll = float.Parse(message.Substring(2));
+
+        }
+
         if (timer > 0)
             timer -= Time.deltaTime;
         else
@@ -61,24 +92,28 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = restPos;
 
-            if (motion.y > 0)
+            if (roll - prevRoll > 20.0f)
             {
                 bobCast = true;
-                rb.AddForce(0.0f, 300.0f, 600.0f * motion.y);
+                rb.AddForce(0.0f, 300.0f, 600.0f * Mathf.Abs(roll) * 0.1f);
             }
+            prevRoll = roll;
+
 
             return;
         }
 
-        Vector3 dir = transform.position - playerCam.transform.position;
-        rb.AddForce(20.0f * dir.normalized * scrollDelta * Time.deltaTime);
+     
+
+
+
     }
 
     private void FixedUpdate()
     {
         Vector3 dir = transform.position - playerCam.transform.position;
-        rb.AddForce(motion.x * 5.0f * dir.normalized.x, 0.0f, 0.0f);
-
+        rb.AddForce(pitch * 0.2f , 0.0f, 0.0f);
+        
     }
 
     void Select()
