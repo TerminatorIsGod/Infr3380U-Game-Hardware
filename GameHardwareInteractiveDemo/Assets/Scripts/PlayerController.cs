@@ -61,8 +61,8 @@ public class PlayerController : MonoBehaviour
         {
             
 
-            if (message == "Pressed")
-                SceneManager.LoadScene(0);
+            //if (message == "Pressed")
+                //SceneManager.LoadScene(0);
 
             if (message == "Clockwise")
                 scrollDelta = 2000;

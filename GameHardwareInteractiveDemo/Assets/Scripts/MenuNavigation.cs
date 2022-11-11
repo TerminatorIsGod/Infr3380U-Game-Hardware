@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class MenuNavigation : MonoBehaviour
 {
+    public SerialController serialController;
     int menuOption;
     PlayerInputActions playerInputActions;
     float scrollDelta;
@@ -19,24 +20,31 @@ public class MenuNavigation : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
 
-        playerInputActions.Menu.Scroll.performed += cntxt => scrollDelta = cntxt.ReadValue<float>();
-        playerInputActions.Menu.Select.performed += cntxt => Select();
+       // playerInputActions.Menu.Scroll.performed += cntxt => scrollDelta = cntxt.ReadValue<float>();
+        //playerInputActions.Menu.Select.performed += cntxt => Select();
 
         startPos = selectUI.position;
+
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        menuOption += (int)scrollDelta / 120;
-        if (menuOption > 0)
+
+        string message = serialController.ReadSerialMessage();
+
+        if (message != null)
         {
-            menuOption = 0;
-        }
-        else if (menuOption < 0)
-        {
-            menuOption = -1;
+            if (message == "Pressed")
+                Select();
+
+            if (message == "Clockwise")
+                menuOption = 0;
+
+            else if (message == "CounterClockwise")
+                menuOption = -1;
         }
 
         selectUI.position = startPos + new Vector2(0.0f, 125.9f) * menuOption;
