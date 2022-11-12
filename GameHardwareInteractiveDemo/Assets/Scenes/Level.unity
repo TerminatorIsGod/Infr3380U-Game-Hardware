@@ -927,7 +927,7 @@ MonoBehaviour:
   playerCam: {fileID: 1603001779}
   bobCast: 0
   fishCaught: 0
-  timer: 25
+  timer: 40
   timerUI: {fileID: 1289280622}
   numFishCaught: 0
   fishUI: {fileID: 1714802776}

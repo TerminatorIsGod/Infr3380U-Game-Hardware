@@ -26,18 +26,20 @@ public class MenuNavigation : MonoBehaviour
         startPos = selectUI.position;
 
         serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
+       
         string message = serialController.ReadSerialMessage();
         if (message != null)
         {
             if (message == "Pressed")
+            {
+                Debug.Log("ButtonPressed!");
                 Select();
+            }
 
             if (message == "Clockwise")
                 menuOption = 0;
