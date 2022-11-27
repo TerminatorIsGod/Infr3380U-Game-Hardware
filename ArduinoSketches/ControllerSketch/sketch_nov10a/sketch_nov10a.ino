@@ -17,7 +17,9 @@ long oldPosition  = -999;
 void setup() {
 
   //Button Input
-  pinMode(2, INPUT);
+  pinMode(2, INPUT_PULLUP);
+  digitalWrite(2, HIGH);
+
 
   //Vibration Output
   pinMode(8, OUTPUT);
@@ -36,7 +38,7 @@ void loop() {
   
   //Button
   buttonState = digitalRead(2);
-  if(buttonState > 0)
+  if(buttonState == HIGH)
   {
     Serial.println("Pressed");
   }

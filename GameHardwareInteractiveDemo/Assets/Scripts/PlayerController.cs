@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 dir = transform.position - playerCam.transform.position;
-        rb.AddForce(pitch * 0.2f , 0.0f, 0.0f);
+        rb.AddForce(-pitch * 0.2f , 0.0f, 0.0f);
         
     }
 
