@@ -20,7 +20,7 @@ public class Fish : MonoBehaviour
         if (PlayerController.instance.fishCaught)
             return;
 
-        if (dir.magnitude < 4.0f)
+        if (dir.magnitude < 7.0f)
         {
             rb.AddForce(Time.deltaTime * dir.normalized);
         }
@@ -29,6 +29,8 @@ public class Fish : MonoBehaviour
         {
             PlayerController.instance.fishCaught = true;
             rb.isKinematic = true;
+            Collider col = rb.GetComponent<Collider>(); 
+            col.isTrigger = true;
             PlayerController.instance.hookedUI.SetActive(true);
             transform.parent = PlayerController.instance.gameObject.transform;
             PlayerController.instance.serialController.SendSerialMessage("V");

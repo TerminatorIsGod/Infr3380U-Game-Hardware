@@ -25,6 +25,8 @@ void setup() {
   pinMode(8, OUTPUT);
 
 
+
+
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x6B);  // PWR_MGMT_1 register
@@ -41,6 +43,10 @@ void loop() {
   if(buttonState == HIGH)
   {
     Serial.println("Pressed");
+  }
+  else
+  {
+    Serial.println("Released");
   }
 
   //Rotary Encoder
@@ -82,8 +88,8 @@ void loop() {
 
   //send the data out the serial port
  
-  Serial.print("P "); Serial.println(pitch);
-  Serial.print("R "); Serial.println(roll);
+  Serial.print("X "); Serial.println(pitch);
+  Serial.print("Y "); Serial.println(roll);
 
   // Serial.print("AcX = "); Serial.print(AcX);
   // Serial.print(" | AcY = "); Serial.print(AcY);

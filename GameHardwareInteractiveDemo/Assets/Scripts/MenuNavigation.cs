@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using TMPro;
 
 
 public class MenuNavigation : MonoBehaviour
@@ -14,6 +14,16 @@ public class MenuNavigation : MonoBehaviour
     float scrollDelta;
     public RectTransform selectUI;
     Vector2 startPos;
+    public TextMeshProUGUI highscoreUI;
+
+    public GameObject loadingUI;
+
+    public static int highScore = 0;
+    bool changineScene = false;
+    AsyncOperation asyncLoad;
+
+    bool canPress = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,19 +36,29 @@ public class MenuNavigation : MonoBehaviour
         startPos = selectUI.position;
 
         serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
+
+        highscoreUI.text = "High Score: " + highScore;
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        serialController.maxUnreadMessages = 0;
+
+
         string message = serialController.ReadSerialMessage();
         if (message != null)
         {
-            if (message == "Pressed")
+            if (message == "Pressed" && canPress)
             {
-                Debug.Log("ButtonPressed!");
+                //Debug.Log("ButtonPressed!");
+                canPress = false;
                 Select();
+            }
+
+            if (message == "Released")
+            {
+                canPress = true;
             }
 
             if (message == "Clockwise")
@@ -48,20 +68,33 @@ public class MenuNavigation : MonoBehaviour
                 menuOption = -1;
         }
 
-        serialController.SendSerialMessage("I");
+        
         selectUI.position = startPos + new Vector2(0.0f, 125.9f) * menuOption;
     }
 
     void Select()
     {
-        if (menuOption == 0)
+        if (menuOption == 0 && !changineScene)
         {
+            changineScene = true;
+            loadingUI.SetActive(true);
+
+            //serialController.StopAllCoroutines();
+            //serialController.gameObject.SetActive(false);
+
             SceneManager.LoadScene(1);
+
+
         }
         else
         {
             Debug.Log("Quitting");
             Application.Quit();
         }
+    }
+
+    void OnApplicationQuit()
+    {
+        serialController.SendSerialMessage("I");
     }
 }

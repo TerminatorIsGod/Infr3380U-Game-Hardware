@@ -19,6 +19,8 @@ public class catchTrigger : MonoBehaviour
                 PlayerController.instance.fishCaught = false;
                 PlayerController.instance.timer += 20.0f;
                 PlayerController.instance.numFishCaught += 1;
+                if (PlayerController.instance.numFishCaught > MenuNavigation.highScore)
+                    MenuNavigation.highScore = PlayerController.instance.numFishCaught;
                 PlayerController.instance.hookedUI.SetActive(false);
 
                 Destroy(PlayerController.instance.gameObject.transform.GetChild(0).gameObject);
